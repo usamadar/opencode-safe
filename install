@@ -9,7 +9,7 @@ NC='\033[0m' # No Color
 
 usage() {
     cat <<EOF
-OpenCode Installer
+OpenCode Safe Installer
 
 Usage: install.sh [options]
 
@@ -65,7 +65,20 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-INSTALL_DIR=$HOME/.opencode-safe/bin
+# Install directory priority:
+# 1) OPENCODE_SAFE_INSTALL_DIR
+# 2) XDG_BIN_DIR
+# 3) \$HOME/bin (if it exists or can be created)
+# 4) \$HOME/.opencode-safe/bin
+if [ -n "${OPENCODE_SAFE_INSTALL_DIR:-}" ]; then
+    INSTALL_DIR="$OPENCODE_SAFE_INSTALL_DIR"
+elif [ -n "${XDG_BIN_DIR:-}" ]; then
+    INSTALL_DIR="$XDG_BIN_DIR"
+elif [ -d "$HOME/bin" ] || mkdir -p "$HOME/bin" 2>/dev/null; then
+    INSTALL_DIR="$HOME/bin"
+else
+    INSTALL_DIR="$HOME/.opencode-safe/bin"
+fi
 mkdir -p "$INSTALL_DIR"
 
 # If --binary is provided, skip all download/detection logic
