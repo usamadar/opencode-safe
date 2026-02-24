@@ -38,6 +38,23 @@ export namespace Config {
   const ModelId = z.string().meta({ $ref: "https://models.dev/model-schema.json#/$defs/Model" })
 
   const log = Log.create({ service: "config" })
+  const PRIVACY_DISABLED_PROVIDERS = ["opencode", "zenmux"] as const
+
+  function applyPrivacyDefaults(result: Info): Info {
+    const disabled = new Set(result.disabled_providers ?? [])
+    for (const providerID of PRIVACY_DISABLED_PROVIDERS) {
+      disabled.add(providerID)
+    }
+
+    result.share = "disabled"
+    result.autoshare = false
+    result.disabled_providers = Array.from(disabled)
+    result.experimental = {
+      ...(result.experimental ?? {}),
+      openTelemetry: false,
+    }
+    return result
+  }
 
   // Managed settings directory for enterprise deployments (highest priority, admin-controlled)
   // These settings override all user and project settings
@@ -251,6 +268,7 @@ export namespace Config {
     }
 
     result.plugin = deduplicatePlugins(result.plugin ?? [])
+    result = applyPrivacyDefaults(result)
 
     return {
       config: result,

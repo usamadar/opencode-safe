@@ -315,7 +315,7 @@ export namespace Session {
       )
     })
     const cfg = await Config.get()
-    if (!result.parentID && (Flag.OPENCODE_AUTO_SHARE || cfg.share === "auto"))
+    if (!result.parentID && cfg.share !== "disabled" && (Flag.OPENCODE_AUTO_SHARE || cfg.share === "auto"))
       share(result.id).catch(() => {
         // Silently ignore sharing errors during session creation
       })
@@ -341,7 +341,7 @@ export namespace Session {
   export const share = fn(Identifier.schema("session"), async (id) => {
     const cfg = await Config.get()
     if (cfg.share === "disabled") {
-      throw new Error("Sharing is disabled in configuration")
+      throw new Error("Sharing is disabled in this privacy-first build")
     }
     const { ShareNext } = await import("@/share/share-next")
     const share = await ShareNext.create(id)

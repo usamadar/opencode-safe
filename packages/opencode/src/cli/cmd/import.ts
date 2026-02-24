@@ -1,6 +1,7 @@
 import type { Argv } from "yargs"
 import type { Session as SDKSession, Message, Part } from "@opencode-ai/sdk/v2"
 import { Session } from "../../session"
+import { Config } from "../../config/config"
 import { cmd } from "./cmd"
 import { bootstrap } from "../bootstrap"
 import { Database } from "../../storage/db"
@@ -89,6 +90,13 @@ export const ImportCommand = cmd({
       const isUrl = args.file.startsWith("http://") || args.file.startsWith("https://")
 
       if (isUrl) {
+        const cfg = await Config.get()
+        if (cfg.share === "disabled") {
+          process.stdout.write("Importing share URLs is disabled in this privacy-first build")
+          process.stdout.write(EOL)
+          return
+        }
+
         const slug = parseShareUrl(args.file)
         if (!slug) {
           const baseUrl = await ShareNext.url()

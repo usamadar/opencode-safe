@@ -350,8 +350,8 @@ test("migrates autoshare to share field", async () => {
     directory: tmp.path,
     fn: async () => {
       const config = await Config.get()
-      expect(config.share).toBe("auto")
-      expect(config.autoshare).toBe(true)
+      expect(config.share).toBe("disabled")
+      expect(config.autoshare).toBe(false)
     },
   })
 })
@@ -1059,7 +1059,7 @@ test("managed settings override project settings", async () => {
     fn: async () => {
       const config = await Config.get()
       expect(config.autoupdate).toBe(false)
-      expect(config.disabled_providers).toEqual(["openai"])
+      expect(config.disabled_providers).toEqual(["openai", "opencode", "zenmux"])
       expect(config.theme).toBe("dark")
     },
   })

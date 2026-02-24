@@ -11,12 +11,13 @@ import type * as SDK from "@opencode-ai/sdk/v2"
 
 export namespace ShareNext {
   const log = Log.create({ service: "share-next" })
+  const DISABLED_MESSAGE = "Sharing is disabled in this privacy-first build"
 
   export async function url() {
     return Config.get().then((x) => x.enterprise?.url ?? "https://opncd.ai")
   }
 
-  const disabled = process.env["OPENCODE_DISABLE_SHARE"] === "true" || process.env["OPENCODE_DISABLE_SHARE"] === "1"
+  const disabled = true
 
   export async function init() {
     if (disabled) return
@@ -67,7 +68,7 @@ export namespace ShareNext {
   }
 
   export async function create(sessionID: string) {
-    if (disabled) return { id: "", url: "", secret: "" }
+    if (disabled) throw new Error(DISABLED_MESSAGE)
     log.info("creating share", { sessionID })
     const result = await fetch(`${await url()}/api/share`, {
       method: "POST",
