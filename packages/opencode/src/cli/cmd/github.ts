@@ -386,10 +386,10 @@ on:
 jobs:
   opencode:
     if: |
-      contains(github.event.comment.body, ' /oc') ||
-      startsWith(github.event.comment.body, '/oc') ||
-      contains(github.event.comment.body, ' /opencode') ||
-      startsWith(github.event.comment.body, '/opencode')
+      contains(github.event.comment.body, ' /ocs') ||
+      startsWith(github.event.comment.body, '/ocs') ||
+      contains(github.event.comment.body, ' /opencode-safe') ||
+      startsWith(github.event.comment.body, '/opencode-safe')
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -402,8 +402,8 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run opencode
-        uses: anomalyco/opencode/github@latest${envStr}
+      - name: Run opencode-safe
+        uses: usamadar/opencode-safe/github@latest${envStr}
         with:
           model: ${provider}/${model}`,
             )

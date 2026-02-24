@@ -437,7 +437,7 @@ pub fn run() {
 
     #[cfg(all(target_os = "macos", not(debug_assertions)))]
     let _ = std::process::Command::new("killall")
-        .arg("opencode-cli")
+        .arg("opencode-safe-cli")
         .output();
 
     let mut builder = tauri::Builder::default()
@@ -765,7 +765,7 @@ async fn setup_server_connection(app: AppHandle) -> ServerConnection {
 
     ServerConnection::CLI {
         url: local_url,
-        username: Some("opencode".to_string()),
+        username: Some("opencode-safe".to_string()),
         password: Some(password),
         child,
         health_check,
@@ -805,7 +805,7 @@ fn opencode_db_path() -> Result<PathBuf, &'static str> {
         }
     };
 
-    Ok(data_home.join("opencode").join("opencode.db"))
+    Ok(data_home.join("opencode-safe").join("opencode-safe.db"))
 }
 
 // Creates a `once` listener for the specified event and returns a future that resolves

@@ -13,7 +13,6 @@ permissions:
 jobs:
   sign-cli:
     runs-on: blacksmith-4vcpu-ubuntu-2404
-    if: github.repository == 'anomalyco/opencode'
     steps:
       - uses: actions/checkout@v3
         with:
@@ -31,8 +30,8 @@ jobs:
         id: upload_unsigned_windows_cli
         uses: actions/upload-artifact@v4
         with:
-          name: unsigned-opencode-windows-cli
-          path: packages/opencode/dist/opencode-windows-x64/bin/opencode.exe
+          name: unsigned-opencode-safe-windows-cli
+          path: packages/opencode/dist/opencode-safe-windows-x64/bin/opencode-safe.exe
           if-no-files-found: error
 
       - name: Submit SignPath signing request
@@ -46,11 +45,11 @@ jobs:
           artifact-configuration-slug: ${{ secrets.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
           github-artifact-id: ${{ steps.upload_unsigned_windows_cli.outputs.artifact-id }}
           wait-for-completion: true
-          output-artifact-directory: signed-opencode-cli
+          output-artifact-directory: signed-opencode-safe-cli
 
       - name: Upload signed Windows CLI
         uses: actions/upload-artifact@v4
         with:
-          name: signed-opencode-windows-cli
-          path: signed-opencode-cli/*.exe
+          name: signed-opencode-safe-windows-cli
+          path: signed-opencode-safe-cli/*.exe
           if-no-files-found: error

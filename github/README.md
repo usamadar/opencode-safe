@@ -1,30 +1,30 @@
-# opencode GitHub Action
+# opencode-safe GitHub Action
 
-A GitHub Action that integrates [opencode](https://opencode.ai) directly into your GitHub workflow.
+A GitHub Action that integrates `opencode-safe` directly into your GitHub workflow.
 
-Mention `/opencode` in your comment, and opencode will execute tasks within your GitHub Actions runner.
+Mention `/opencode-safe` in your comment, and opencode-safe will execute tasks within your GitHub Actions runner.
 
 ## Features
 
 #### Explain an issue
 
-Leave the following comment on a GitHub issue. `opencode` will read the entire thread, including all comments, and reply with a clear explanation.
+Leave the following comment on a GitHub issue. `opencode-safe` will read the entire thread, including all comments, and reply with a clear explanation.
 
 ```
-/opencode explain this issue
+/opencode-safe explain this issue
 ```
 
 #### Fix an issue
 
-Leave the following comment on a GitHub issue. opencode will create a new branch, implement the changes, and open a PR with the changes.
+Leave the following comment on a GitHub issue. opencode-safe will create a new branch, implement the changes, and open a PR with the changes.
 
 ```
-/opencode fix this
+/opencode-safe fix this
 ```
 
 #### Review PRs and make changes
 
-Leave the following comment on a GitHub PR. opencode will implement the requested change and commit it to the same PR.
+Leave the following comment on a GitHub PR. opencode-safe will implement the requested change and commit it to the same PR.
 
 ```
 Delete the attachment from S3 when the note is removed /oc
@@ -53,7 +53,7 @@ This allows for more targeted requests without needing to specify file paths or 
 Run the following command in the terminal from your GitHub repo:
 
 ```bash
-opencode github install
+opencode-safe github install
 ```
 
 This will walk you through installing the GitHub app, creating the workflow, and setting up secrets.
@@ -88,7 +88,7 @@ This will walk you through installing the GitHub app, creating the workflow, and
               persist-credentials: false
 
           - name: Run opencode
-           uses: anomalyco/opencode/github@latest
+           uses: usamadar/opencode-safe/github@latest
            env:
              ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -101,7 +101,7 @@ This will walk you through installing the GitHub app, creating the workflow, and
 
 ## Support
 
-This is an early release. If you encounter issues or have feedback, please create an issue at https://github.com/anomalyco/opencode/issues.
+This is an early release. If you encounter issues or have feedback, please create an issue at https://github.com/usamadar/opencode-safe/issues.
 
 ## Development
 
