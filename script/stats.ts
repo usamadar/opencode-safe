@@ -196,7 +196,7 @@ console.log(`Fetching GitHub releases for ${repo}...\n`)
 const releases = await fetchReleases()
 console.log(`\nFetched ${releases.length} releases total\n`)
 
-const { total: githubTotal, stats } = calculate(releases)
+const { total: githubTotal } = calculate(releases)
 
 console.log(`Fetching npm all-time downloads for ${npm}...\n`)
 const npmDownloads = await fetchNpmDownloads(npm)

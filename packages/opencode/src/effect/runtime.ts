@@ -1,25 +1,19 @@
-import { Effect, Layer, ManagedRuntime } from "effect"
-import { Account } from "@/account/effect"
-import { Auth } from "@/auth/effect"
-import { Instances } from "@/effect/instances"
-import type { InstanceServices } from "@/effect/instances"
-import { Installation } from "@/installation"
-import { Truncate } from "@/tool/truncate-effect"
-import { Instance } from "@/project/instance"
+import { Observability } from "./observability"
+import { Layer, type Context, ManagedRuntime, type Effect } from "effect"
+import { memoMap } from "./memo-map"
 
-export const runtime = ManagedRuntime.make(
-  Layer.mergeAll(
-    Account.defaultLayer, //
-    Installation.defaultLayer,
-    Truncate.defaultLayer,
-    Instances.layer,
-  ).pipe(Layer.provideMerge(Auth.layer)),
-)
+export function makeRuntime<I, S, E>(service: Context.Service<I, S>, layer: Layer.Layer<I, E>) {
+  let rt: ManagedRuntime.ManagedRuntime<I, E> | undefined
+  const getRuntime = () =>
+    (rt ??= ManagedRuntime.make(Layer.provideMerge(layer, Observability.layer) as Layer.Layer<I, E>, { memoMap }))
 
-export function runPromiseInstance<A, E>(effect: Effect.Effect<A, E, InstanceServices>) {
-  return runtime.runPromise(effect.pipe(Effect.provide(Instances.get(Instance.directory))))
-}
-
-export function disposeRuntime() {
-  return runtime.dispose()
+  return {
+    runSync: <A, Err>(fn: (svc: S) => Effect.Effect<A, Err, I>) => getRuntime().runSync(service.use(fn)),
+    runPromiseExit: <A, Err>(fn: (svc: S) => Effect.Effect<A, Err, I>, options?: Effect.RunOptions) =>
+      getRuntime().runPromiseExit(service.use(fn), options),
+    runPromise: <A, Err>(fn: (svc: S) => Effect.Effect<A, Err, I>, options?: Effect.RunOptions) =>
+      getRuntime().runPromise(service.use(fn), options),
+    runFork: <A, Err>(fn: (svc: S) => Effect.Effect<A, Err, I>) => getRuntime().runFork(service.use(fn)),
+    runCallback: <A, Err>(fn: (svc: S) => Effect.Effect<A, Err, I>) => getRuntime().runCallback(service.use(fn)),
+  }
 }

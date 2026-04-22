@@ -32,10 +32,9 @@ Your app is ready to be deployed!
 ## E2E Testing
 
 Playwright starts the Vite dev server automatically via `webServer`, and UI tests need an opencode-safe backend (defaults to `localhost:4096`).
-Use the local runner to create a temp sandbox, seed data, and run the tests.
 
 ```bash
-bunx playwright install
+bunx playwright install chromium
 bun run test:e2e:local
 bun run test:e2e:local -- --grep "settings"
 ```
