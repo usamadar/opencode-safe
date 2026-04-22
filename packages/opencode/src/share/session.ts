@@ -24,7 +24,7 @@ export const layer = Layer.effect(
 
     const share = Effect.fn("SessionShare.share")(function* (sessionID: SessionID) {
       const conf = yield* cfg.get()
-      if (conf.share === "disabled") throw new Error("Sharing is disabled in configuration")
+      if (conf.share === "disabled") throw new Error("Sharing is disabled in this privacy-first build")
       const result = yield* shareNext.create(sessionID)
       yield* Effect.sync(() =>
         SyncEvent.run(Session.Event.Updated, { sessionID, info: { share: { url: result.url } } }),
